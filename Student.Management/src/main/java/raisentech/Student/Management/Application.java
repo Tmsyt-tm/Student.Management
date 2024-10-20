@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Application {
 
-	private  String name ="Takeda Masahiro";
+	private  String name ="Takeda ";
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
