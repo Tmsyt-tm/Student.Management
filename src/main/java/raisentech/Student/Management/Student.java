@@ -1,22 +1,20 @@
 package raisentech.Student.Management;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.ibatis.annotations.Select;
+
+@Getter
+@Setter
 public class Student {
 
-   private String name;
-   private  int age;
-
-   public  String getName() {
-      return  name;
-   }
-   public  void  setName(String name) {
-     this.name = name;
-  }
-
-  public  int getAge() {
-      return  age;
-  }
-
-  public  void  setAge(int age){
-      this.age = age;
-  }
+  private String id;
+  private String name;
+  private String furigana;
+  private String nickname;
+  private String email;
+  private String region;
+  private String phone_number;
+  private String age;
+  private String gender;
 }
