@@ -27,6 +27,6 @@ public class Application {
 	@GetMapping("/studentcourseList")
 	public List<student_coruses> getstudentcourseList() {
 		return repository.searchcourse();
-///新規リポジトリへのプッシュ２回目
+///新規リポジトリへのプッシュ
 	}
 }
