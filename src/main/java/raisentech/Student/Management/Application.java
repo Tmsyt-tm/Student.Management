@@ -27,6 +27,6 @@ public class Application {
 	@GetMapping("/studentcourseList")
 	public List<student_coruses> getstudentcourseList() {
 		return repository.searchcourse();
-///
+///プルリクエストの為のテスト
 	}
 }
