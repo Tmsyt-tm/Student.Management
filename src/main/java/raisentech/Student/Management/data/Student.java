@@ -1,8 +1,7 @@
-package raisentech.Student.Management;
+package raisentech.Student.Management.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Select;
 
 @Getter
 @Setter
