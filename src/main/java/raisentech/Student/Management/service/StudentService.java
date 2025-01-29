@@ -1,12 +1,11 @@
 package raisentech.Student.Management.service;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import raisentech.Student.Management.StudentRepository;
 import raisentech.Student.Management.data.Student;
-import raisentech.Student.Management.data.StudentCourses;
+import raisentech.Student.Management.data.StudentsCourses;
 
 @Service
 public class StudentService {
@@ -24,7 +23,7 @@ public class StudentService {
   }
 
   //コース情報の全件取得
-  public List<StudentCourses> searchStudentsCourseList() {
+  public List<StudentsCourses> searchStudentsCourseList() {
     return repository.searchStudentCourses();
   }
 
@@ -34,7 +33,7 @@ public class StudentService {
   }
 
   //コース情報の中からJavaのみ取得
-  public static List<StudentCourses> searchJavaCourseStudents() {
+  public static List<StudentsCourses> searchJavaCourseStudents() {
     return repository.searchJavaCourseStudents();
   }
 }

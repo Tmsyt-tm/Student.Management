@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudentCourses {
+public class StudentsCourses {
 
   private int id; // "id" カラムに対応
   private int studentId; // "student_id" カラムに対応
