@@ -53,6 +53,4 @@ public class StudentController {
   public List<StudentsCourses> getJavaCourseStudents() {
     return service.searchJavaCourseStudents();
   }
-
-  @PostMapping("/registerStudent");
 }
