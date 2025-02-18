@@ -1,8 +1,7 @@
-package raisentech.Student.Management;
+package raisentech.Student.Management.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Select;
 
 @Getter
 @Setter
@@ -17,4 +16,7 @@ public class Student {
   private String phone_number;
   private String age;
   private String gender;
+  private String remarks;
+  private boolean isDeleted;
+
 }
