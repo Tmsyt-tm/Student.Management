@@ -1,4 +1,4 @@
-package raisentech.Student.Management.Controller.converter;
+package raisentech.Student.Management.controller.converter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +26,14 @@ public class StudentConverter {
       studentDetails.add(studentDetail);
     });
     return studentDetails;
+  }
+
+  // StudentDetailをStudentに変換するメソッドを追加
+  public Student convertToStudent(StudentDetail studentDetail) {
+    Student student = new Student();
+    student.setName(studentDetail.getStudent().getName());;
+    // 必要に応じて他の属性も設定
+
+    return student;
   }
 }
