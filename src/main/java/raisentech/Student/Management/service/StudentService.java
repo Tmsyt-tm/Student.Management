@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import raisentech.Student.Management.StudentRepository;
 import raisentech.Student.Management.controller.converter.StudentConverter;
 import raisentech.Student.Management.data.Student;
@@ -26,7 +27,7 @@ public class StudentService {
     this.repository = repository;
     this.converter = converter;
   }
-
+@Transactional
   // 受講生一覧を取得（StudentDetail 型で返す）
   public List<StudentDetail> getStudentDetails() {
     // まず Student と StudentCourses のリストを取得
@@ -39,6 +40,12 @@ public class StudentService {
   // Studentを登録するメソッド（データベース保存）
   public void registerStudentToDb(Student student) {
     repository.insertStudent(student);  // StudentRepository経由でデータベースに保存
+    StudentDetail studentDetail = new StudentDetail(); // インスタンスを作成
+    for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) { // インスタンス経由で呼び出す
+      repository.registerStudentsCourses(studentsCourses);
+
+    }
+
   }
 
   // 生徒情報の全件取得

@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import raisentech.Student.Management.data.Student;
 import raisentech.Student.Management.data.StudentsCourses;
@@ -27,9 +28,16 @@ public interface StudentRepository {
   List<StudentsCourses> searchJavaCourseStudents();
 
   // 受講生情報をデータベースに登録
-  @Insert("INSERT INTO students (name) VALUES (#{name})")
+  @Insert("INSERT INTO students (name,furigana,nickname,email,region,phone_number,age,gender) "
+      +"VALUES (#{name}, #{furigana}, #{nickname}, #{email}, #{region},  #{phone_number}, #{age}, #{gender})")
+  @Options(useGeneratedKeys = true, keyProperty = "id")
   void insertStudent(Student student);  // 引数としてStudentオブジェクトを受け取る
 
+  //コース情報をデータベースへ登録
+  @Insert("INSERT INTO students_courses(student_id, course_name,start_date, end_date) "
+      +"VALUES(#{studentId},#{courseName},#{startDate},#{endDate})")
+  @Options(useGeneratedKeys = true, keyProperty = "id")
+  void  registerStudentsCourses(StudentsCourses studentsCourses);
 }
 
 
