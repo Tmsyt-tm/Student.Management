@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import raisentech.Student.Management.data.Student;
 import raisentech.Student.Management.data.StudentsCourses;
 
@@ -28,16 +29,21 @@ public interface StudentRepository {
   List<StudentsCourses> searchJavaCourseStudents();
 
   // 受講生情報をデータベースに登録
-  @Insert("INSERT INTO students (name,furigana,nickname,email,region,phone_number,age,gender) "
-      +"VALUES (#{name}, #{furigana}, #{nickname}, #{email}, #{region},  #{phone_number}, #{age}, #{gender})")
+  @Insert("INSERT INTO students (name,furigana,nickname,email,region,phone_number,age,gender,courses) "
+      +"VALUES (#{name}, #{furigana}, #{nickname}, #{email}, #{region},  #{phone_number}, #{age}, #{gender},#{courses})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void insertStudent(Student student);  // 引数としてStudentオブジェクトを受け取る
 
   //コース情報をデータベースへ登録
-  @Insert("INSERT INTO students_courses(student_id, course_name,start_date, end_date) "
+  @Insert("INSERT INTO student_courses(student_id, course_name,start_date, end_date) "
       +"VALUES(#{studentId},#{courseName},#{startDate},#{endDate})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void  registerStudentsCourses(StudentsCourses studentsCourses);
+
+//受講生更新処理
+  @Update("UPDATE students SET name = #{name}, email = #{email}, phone_number= #{phone_number} WHERE id = #{id}")
+  int updateStudent(Student student);
+
 }
 
 

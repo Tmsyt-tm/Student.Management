@@ -27,25 +27,35 @@ public class StudentService {
     this.repository = repository;
     this.converter = converter;
   }
-@Transactional
-  // 受講生一覧を取得（StudentDetail 型で返す）
-  public List<StudentDetail> getStudentDetails() {
-    // まず Student と StudentCourses のリストを取得
-    List<Student> students = repository.search();
-    List<StudentsCourses> courses = repository.searchStudentCourses();
-    // StudentConverter を使って StudentDetail 型に変換
-    return converter.convertStudentDetails(students, courses);
-  }
 
-  // Studentを登録するメソッド（データベース保存）
-  public void registerStudentToDb(Student student) {
-    repository.insertStudent(student);  // StudentRepository経由でデータベースに保存
-    StudentDetail studentDetail = new StudentDetail(); // インスタンスを作成
-    for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) { // インスタンス経由で呼び出す
-      repository.registerStudentsCourses(studentsCourses);
+  @Transactional
+  // トランザクションの統一メソッド
+  public List<StudentDetail> handleStudentTransaction(StudentDetail studentDetail, boolean isRetrieveDetails) {
+    if (isRetrieveDetails) {
+      // 受講生一覧を取得する処理はそのまま
+      List<Student> students = repository.search();
+      List<StudentsCourses> courses = repository.searchStudentCourses();
+      // ここでリストを返す処理
+      return converter.convertStudentDetails(students, courses);
+    } else {
+      // 登録処理の場合
+      // まず、StudentDetail から Student を取得
+      Student student = studentDetail.getStudent();
 
+      // ① Student 情報の登録
+      repository.insertStudent(student);
+
+      // ② 登録後、生成された ID を利用するために、必要ならば student の ID を取得（DB 側で自動生成される場合）
+      // ここで student に ID がセットされる前提で、以下の処理を実施
+
+      // ③ コース情報の登録
+      for (StudentsCourses course : studentDetail.getStudentsCourses()) {
+        // 登録された student の ID をセットする
+        course.setStudentId(student.getId());
+        repository.registerStudentsCourses(course);
+      }
     }
-
+    return null;
   }
 
   // 生徒情報の全件取得
@@ -68,5 +78,7 @@ public class StudentService {
     return repository.searchJavaCourseStudents();
   }
 
-
+  public boolean updateStudent(Student student) {
+    return repository.updateStudent(student) > 0;
+  }
 }
