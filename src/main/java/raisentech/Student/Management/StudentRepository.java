@@ -1,7 +1,6 @@
 package raisentech.Student.Management;
 
 import java.util.List;
-import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -13,22 +12,20 @@ import raisentech.Student.Management.data.StudentsCourses;
 @Mapper
 public interface StudentRepository {
 
-  //全件取得機能
+  //取得機能
   @Select("SELECT * FROM students ")
   List<Student> search();
 
-  @Select("SELECT * FROM student_courses")
-  List<StudentsCourses> searchStudentCourses();
+  //@Select("SELECT * FROM student_courses")
+  //List<StudentsCourses> StudentCourses();
 
-  // 30代の学生を取得するクエリ
-  @Select("SELECT * FROM students WHERE age BETWEEN 30 AND 39")
-  List<Student> searchInTheir30sStudents();
+  @Select("SELECT * FROM students WHERE id = #{id}")
+  Student findStudent(String id);
 
-  //Javaコースのコース情報だけを取得するクエリ
-  @Select("SELECT * FROM student_courses WHERE course_name = 'Java Programming'")
-  List<StudentsCourses> searchJavaCourseStudents();
+  @Select("SELECT * FROM student_courses WHERE student_id = #{studentId}")
+  List<StudentsCourses> findStudentCourses(int studentId);
 
-  // 受講生情報をデータベースに登録
+  // 新規受講生情報をデータベースに登録
   @Insert("INSERT INTO students (name,furigana,nickname,email,region,phone_number,age,gender,courses) "
       +"VALUES (#{name}, #{furigana}, #{nickname}, #{email}, #{region},  #{phone_number}, #{age}, #{gender},#{courses})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
@@ -41,8 +38,15 @@ public interface StudentRepository {
   void  registerStudentsCourses(StudentsCourses studentsCourses);
 
 //受講生更新処理
-  @Update("UPDATE students SET name = #{name}, email = #{email}, phone_number= #{phone_number} WHERE id = #{id}")
+  @Update("UPDATE students SET name = #{name}, email = #{email} ,remarks=#{remarks} WHERE id = #{id}")
   int updateStudent(Student student);
+
+  // コース情報更新処理
+  @Update("UPDATE student_courses SET course_name = #{courseName} WHERE id = #{id}")
+  int updateCourse(StudentsCourses studentsCourses);
+
+
+
 
 }
 

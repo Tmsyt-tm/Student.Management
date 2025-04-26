@@ -29,17 +29,22 @@ public class StudentService {
   }
 
   @Transactional
-  // トランザクションの統一メソッド
   public List<StudentDetail> handleStudentTransaction(StudentDetail studentDetail, boolean isRetrieveDetails) {
     if (isRetrieveDetails) {
-      // 受講生一覧を取得する処理はそのまま
+      // 受講生情報とコース情報をリポジトリから取得
       List<Student> students = repository.search();
-      List<StudentsCourses> courses = repository.searchStudentCourses();
-      // ここでリストを返す処理
+      List<StudentsCourses> courses = new ArrayList<>();
+
+      // 各受講生に関連するコース情報を取得
+      for (Student student : students) {
+        List<StudentsCourses>  findStudentCourses= repository.findStudentCourses((student.getId()));
+        courses.addAll( findStudentCourses);
+      }
+
+      // 変換処理を行い返す
       return converter.convertStudentDetails(students, courses);
     } else {
       // 登録処理の場合
-      // まず、StudentDetail から Student を取得
       Student student = studentDetail.getStudent();
 
       // ① Student 情報の登録
@@ -51,34 +56,32 @@ public class StudentService {
       // ③ コース情報の登録
       for (StudentsCourses course : studentDetail.getStudentsCourses()) {
         // 登録された student の ID をセットする
-        course.setStudentId(student.getId());
+        course.setStudentId((student.getId()));
         repository.registerStudentsCourses(course);
       }
     }
     return null;
   }
 
-  // 生徒情報の全件取得
-  public List<Student> searchStudentList() {
-    return repository.search();
-  }
+//  @Transactional
+////指定された Student 情報を更新するメソッド（更新成功なら true）
+//  public boolean updateStudent(Student student) {
+//    return repository.updateStudent(student) > 0;
+//  }
+//  //更新したいID をもとに特定の Student 情報を取得するメソッド
+//  public StudentDetail findStudent(String id) {
+//    Student student =  repository.findStudent(id);
+//    List<StudentsCourses> studentsCourses = repository.findStudentCourses(student.getId());
+//    StudentDetail studentDetail = new StudentDetail();
+//    studentDetail.setStudent(student);
+//    studentDetail.setStudentsCourses(studentsCourses);
+//    return studentDetail;
+//  }
 
-  // コース情報の全件取得
-  public List<StudentsCourses> searchStudentsCourseList() {
-    return repository.searchStudentCourses();
-  }
-
-  // 30代の生徒情報取得
-  public List<Student> searchInTheir30sStudents() {
-    return repository.searchInTheir30sStudents();
-  }
-
-  // コース情報の中からJavaのみ取得
-  public List<StudentsCourses> searchJavaCourseStudents() {
-    return repository.searchJavaCourseStudents();
-  }
-
-  public boolean updateStudent(Student student) {
-    return repository.updateStudent(student) > 0;
+  // コース情報を更新するメソッド
+  public int updateCourse(StudentsCourses studentsCourses) {
+    return repository.updateCourse(studentsCourses); // コース情報の更新処理を呼び出し
   }
 }
+
+

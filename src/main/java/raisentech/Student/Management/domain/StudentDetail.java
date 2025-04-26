@@ -12,12 +12,13 @@ import raisentech.Student.Management.data.StudentsCourses;
 public class StudentDetail {
 
   private Student student;
-  private List<StudentsCourses> studentsCourses = new ArrayList<>();
+  private List<StudentsCourses> studentsCourses ;
 
   // **コンストラクタ：新しいインスタンスが作られた際に最初に呼ばれる**
-  public StudentDetail() {
-    this.student = new Student(); // 初期化処理として Student オブジェクトを作成
-    this.studentsCourses = new ArrayList<>(); // リストの初期化
-  }
+
+//  public StudentDetail() {
+//    this.student = new Student(); // 初期化処理として Student オブジェクトを作成
+//    this.studentsCourses = new ArrayList<>(); // リストの初期化
+//  }
 }
 

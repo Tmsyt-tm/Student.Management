@@ -31,19 +31,7 @@ public class StudentConverter {
   // StudentDetail型に変換するメソッドを追加
   public StudentDetail convertToStudentDetail(Student student) {
     StudentDetail studentDetail = new StudentDetail();
-    studentDetail.getStudent().setName(student.getName());
-    studentDetail.getStudent().setFurigana(student.getFurigana());
-    studentDetail.getStudent().setNickname(student.getNickname());
-    studentDetail.getStudent().setEmail(student.getEmail());
-    studentDetail.getStudent().setRegion(student.getRegion());
-    studentDetail.getStudent().setPhone_number(student.getPhone_number());
-    studentDetail.getStudent().setAge(student.getAge());
-    studentDetail.getStudent().setGender(student.getGender());
-    studentDetail.getStudent().setCourses(student.getCourses());
 
-    // 名前の設定
-    // 他のプロパティを設定する場合
-    // studentDetail.setAge(student.getAge());
     return studentDetail;
   }
 
