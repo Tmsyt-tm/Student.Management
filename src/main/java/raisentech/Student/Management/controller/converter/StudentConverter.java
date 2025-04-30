@@ -28,11 +28,11 @@ public class StudentConverter {
     return studentDetails;
   }
 
-  // StudentDetail型に変換するメソッドを追加
-  public StudentDetail convertToStudentDetail(Student student) {
-    StudentDetail studentDetail = new StudentDetail();
-
-    return studentDetail;
-  }
+//   StudentDetail型に変換するメソッドを追加
+//  public StudentDetail convertToStudentDetail(Student student) {
+//    StudentDetail studentDetail = new StudentDetail();
+//
+//    return studentDetail;
+//  }
 
   }

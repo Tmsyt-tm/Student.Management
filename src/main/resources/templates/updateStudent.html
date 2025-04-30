@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>受講生情報更新</title>
+</head>
+<body>
+<h1>受講生情報更新</h1>
+<form th:object="${studentDetail}" action="/students/update" method="post">
+  <input type="hidden" th:field="*{student.id}" />
+
+  <div>
+    <label for="name">名前</label>
+    <input type="text" id="name" th:field="*{student.name}" />
+  </div>
+
+  <div>
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" th:field="*{student.email}" />
+  </div>
+
+  <div>
+    <label>受講コース名：</label>
+    <table>
+      <tr th:each="course, iterStat : *{studentsCourses}">
+        <td>
+        <td>
+        <!-- コースIDを隠しフィールドで渡す -->
+        <input type="hidden" th:field="*{studentsCourses[__${iterStat.index}__].studentId}" />
+          <!-- コースIDを隠しフィールドで渡す -->
+          <input type="hidden" th:field="*{studentsCourses[__${iterStat.index}__].id}" />
+
+          <!-- コース名を編集できるフィールド -->
+          <input type="text" th:field="*{studentsCourses[__${iterStat.index}__].courseName}" />
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <button type="submit">更新</button>
+</form>

@@ -33,14 +33,14 @@ public class StudentController {
   // 統一メソッドで受講生情報とコース情報の一覧を取得
   @GetMapping("/studentList")
   public String getStudentList(Model model) {
-    List<StudentDetail> studentDetails =  service.handleStudentTransaction(null, true);
+    List<StudentDetail> studentDetails = service.handleStudentTransaction(null, true);
 
     model.addAttribute("studentList", studentDetails);
 
     return "studentList";
   }
 
-//新規受講生の登録
+  //新規受講生の登録
   @GetMapping("/newStudent")
   public String newStudent(Model model) {
     StudentDetail studentDetail = new StudentDetail();
@@ -50,14 +50,19 @@ public class StudentController {
     return "registerStudent";
   }
 
-//  //受講生情報の更新
-//  @GetMapping("/students/edit/{id}")
-//  public String editStudent(@PathVariable String id, Model model) {
-//    StudentDetail studentDetail = service.findStudent(id); // IDに対応するStudentを取得
-//
-//    model.addAttribute("studentDetail", studentDetail);
-//    return "updateStudent";
-//  }
+  //受講生情報の更新
+  @GetMapping("/students/edit/{id}")
+  public String editStudent(@PathVariable int id, Model model) {
+    StudentDetail studentDetail = service.findStudent(id); // IDに対応するStudentを取得
+// もしコース情報が空だったら、空のコースを1個追加しておく
+    if (studentDetail.getStudentsCourses() == null || studentDetail.getStudentsCourses()
+        .isEmpty()) {
+      StudentsCourses emptyCourse = new StudentsCourses();
+      studentDetail.getStudentsCourses().add(emptyCourse);
+    }
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
+  }
 
 
   @PostMapping("/registerStudent")
@@ -76,24 +81,27 @@ public class StudentController {
     return "redirect:/studentList"; // 登録後、学生一覧ページにリダイレクト
   }
 
-//  @PostMapping("/students/update")
-//  public String updateStudentForm(@ModelAttribute StudentDetail studentDetail) {
-//    Student student = studentDetail.getStudent();
-//    List<StudentsCourses> courses = studentDetail.getStudentsCourses();
-//
-//    // 学生情報の更新
-//    boolean updated = service.updateStudent(student);
-//
-//    if (updated) {
-//      // コース情報が変更されている場合は、コース情報も更新
-//      for (StudentsCourses course : courses) {
-//        // コース情報が変更されているかチェック
-//        if (course.getId() != 0) {  // 0を特別な値として使用
-//          service.updateCourse(course);  // コース情報を更新
-//        }
-//      }
-//      return "redirect:/studentList"; // 一覧ページへリダイレクト
-//    } else {
-//      return "error"; // 更新失敗時にエラーページを表示
-//    }
+
+  @PostMapping("/students/update")
+  public String updateStudentForm(@ModelAttribute StudentDetail studentDetail) {
+    Student student = studentDetail.getStudent();
+    List<StudentsCourses> courses = studentDetail.getStudentsCourses();
+
+    // 学生情報の更新
+    boolean updated = service.updateStudent(studentDetail);
+
+    if (updated) {
+      // コース情報が変更されている場合は、コース情報も更新
+      for (StudentsCourses course : courses) {
+        // コース情報が変更されているかチェック
+        if (course.getId() != 0) {  // 0を特別な値として使用
+          service.updateCourse(course);  // コース情報を更新
+        }
+      }
+      return "redirect:/studentList"; // 一覧ページへリダイレクト
+    } else {
+      return "error"; // 更新失敗時にエラーページを表示
+    }
   }
+}
+

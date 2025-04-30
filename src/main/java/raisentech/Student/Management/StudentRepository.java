@@ -20,7 +20,7 @@ public interface StudentRepository {
   //List<StudentsCourses> StudentCourses();
 
   @Select("SELECT * FROM students WHERE id = #{id}")
-  Student findStudent(String id);
+  Student findStudent(int id);
 
   @Select("SELECT * FROM student_courses WHERE student_id = #{studentId}")
   List<StudentsCourses> findStudentCourses(int studentId);
