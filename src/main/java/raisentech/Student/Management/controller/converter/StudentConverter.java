@@ -15,24 +15,13 @@ public class StudentConverter {
       List<StudentsCourses> studentsCourses) {
     List<StudentDetail> studentDetails = new ArrayList<>();
     students.forEach(student -> {
-      StudentDetail studentDetail = new StudentDetail();
-      studentDetail.setStudent(student);
-
-      List<StudentsCourses> covertStudentCourses = studentsCourses.stream()
+      List<StudentsCourses> convertStudentCourses = studentsCourses.stream()
           .filter(studentCourse -> student.getId() == studentCourse.getStudentId())
           .collect(Collectors.toList());
 
-      studentDetail.setStudentsCourses(covertStudentCourses);
+      StudentDetail studentDetail = new StudentDetail(student, convertStudentCourses);
       studentDetails.add(studentDetail);
     });
     return studentDetails;
   }
-
-//   StudentDetail型に変換するメソッドを追加
-//  public StudentDetail convertToStudentDetail(Student student) {
-//    StudentDetail studentDetail = new StudentDetail();
-//
-//    return studentDetail;
-//  }
-
   }

@@ -43,8 +43,11 @@ public class StudentController {
   //新規受講生の登録
   @GetMapping("/newStudent")
   public String newStudent(Model model) {
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudentsCourses(Arrays.asList(new StudentsCourses())); // コースをセット
+    Student student = new Student(); // 空の学生オブジェクトを用意
+    StudentsCourses course = new StudentsCourses(); // 空のコースオブジェクトを用意
+    List<StudentsCourses> courses = Arrays.asList(course); // リストに包む
+
+    StudentDetail studentDetail = new StudentDetail(student, courses);
 
     model.addAttribute("studentDetail", studentDetail);
     return "registerStudent";

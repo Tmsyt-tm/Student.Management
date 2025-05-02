@@ -69,10 +69,8 @@ public class StudentService {
   public StudentDetail findStudent(int id) {
     Student student = repository.findStudent(id);
     List<StudentsCourses> studentsCourses = repository.findStudentCourses(student.getId());
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentsCourses(studentsCourses);
-    return studentDetail;
+
+    return new StudentDetail(student, studentsCourses);
   }
 
   @Transactional
@@ -98,8 +96,5 @@ public class StudentService {
     int result = repository.updateCourse(studentsCourses);
     System.out.println("更新結果：" + result);
     return result;
-//    public int updateCourse (StudentsCourses studentsCourses){
-//      return repository.updateCourse(studentsCourses); // コース情報の更新処理を呼び出し
-//    }
   }
 }
