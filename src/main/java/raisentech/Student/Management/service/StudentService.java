@@ -27,46 +27,74 @@ public class StudentService {
     this.repository = repository;
     this.converter = converter;
   }
-@Transactional
-  // 受講生一覧を取得（StudentDetail 型で返す）
-  public List<StudentDetail> getStudentDetails() {
-    // まず Student と StudentCourses のリストを取得
-    List<Student> students = repository.search();
-    List<StudentsCourses> courses = repository.searchStudentCourses();
-    // StudentConverter を使って StudentDetail 型に変換
-    return converter.convertStudentDetails(students, courses);
-  }
 
-  // Studentを登録するメソッド（データベース保存）
-  public void registerStudentToDb(Student student) {
-    repository.insertStudent(student);  // StudentRepository経由でデータベースに保存
-    StudentDetail studentDetail = new StudentDetail(); // インスタンスを作成
-    for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) { // インスタンス経由で呼び出す
-      repository.registerStudentsCourses(studentsCourses);
+  @Transactional
+  public List<StudentDetail> handleStudentTransaction(StudentDetail studentDetail,
+      boolean isRetrieveDetails) {
+    if (isRetrieveDetails) {
+      // 受講生情報とコース情報をリポジトリから取得
+      List<Student> students = repository.search();
+      List<StudentsCourses> courses = new ArrayList<>();
 
+      // 各受講生に関連するコース情報を取得
+      for (Student student : students) {
+        List<StudentsCourses> findStudentCourses = repository.findStudentCourses((student.getId()));
+        courses.addAll(findStudentCourses);
+      }
+
+      // 変換処理を行い返す
+      return converter.convertStudentDetails(students, courses);
+    } else {
+      // 登録処理の場合
+      Student student = studentDetail.getStudent();
+
+      // ① Student 情報の登録
+      repository.insertStudent(student);
+
+      // ② 登録後、生成された ID を利用するために、必要ならば student の ID を取得（DB 側で自動生成される場合）
+      // ここで student に ID がセットされる前提で、以下の処理を実施
+
+      // ③ コース情報の登録
+      for (StudentsCourses course : studentDetail.getStudentsCourses()) {
+        // 登録された student の ID をセットする
+        course.setStudentId((student.getId()));
+        repository.registerStudentsCourses(course);
+      }
     }
-
+    return null;
   }
 
-  // 生徒情報の全件取得
-  public List<Student> searchStudentList() {
-    return repository.search();
+  @Transactional
+  //更新したいID をもとに特定の Student 情報を取得するメソッド
+  public StudentDetail findStudent(int id) {
+    Student student = repository.findStudent(id);
+    List<StudentsCourses> studentsCourses = repository.findStudentCourses(student.getId());
+
+    return new StudentDetail(student, studentsCourses);
   }
 
-  // コース情報の全件取得
-  public List<StudentsCourses> searchStudentsCourseList() {
-    return repository.searchStudentCourses();
+  @Transactional
+
+  //指定された Student 情報を更新するメソッド（更新成功なら true）
+  public boolean updateStudent(StudentDetail studentDetail) {
+    Student student = studentDetail.getStudent();
+    List<StudentsCourses> courses = studentDetail.getStudentsCourses();
+
+    // コース情報の更新（新規追加の場合 studentId をセット）
+    for (StudentsCourses course : courses) {
+      if (course.getId() == 0) {  // 新しいコース（まだ登録されていない）
+        course.setStudentId(student.getId());  // studentId をセット
+      }
+      updateCourse(course);  // コース情報の更新 or 挿入
+    }
+    // 受講生本体の更新
+    return repository.updateStudent(student) > 0;
   }
 
-  // 30代の生徒情報取得
-  public List<Student> searchInTheir30sStudents() {
-    return repository.searchInTheir30sStudents();
+  // コース情報を更新するメソッド
+  public int updateCourse(StudentsCourses studentsCourses) {
+    int result = repository.updateCourse(studentsCourses);
+    System.out.println("更新結果：" + result);
+    return result;
   }
-
-  // コース情報の中からJavaのみ取得
-  public List<StudentsCourses> searchJavaCourseStudents() {
-    return repository.searchJavaCourseStudents();
-  }
-
-
 }

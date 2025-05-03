@@ -13,4 +13,6 @@ public class StudentsCourses {
   private String courseName; // "course_name" カラムに対応
   private LocalDate startDate; // "start_date" カラムに対応
   private LocalDate endDate;
-}
+
+
+  }
