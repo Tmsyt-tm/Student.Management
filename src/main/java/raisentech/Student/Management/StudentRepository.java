@@ -13,9 +13,8 @@ import raisentech.Student.Management.data.StudentsCourses;
 public interface StudentRepository {
 
   //取得機能
-  @Select("SELECT * FROM students ")
+  @Select("SELECT * FROM students WHERE is_deleted = false")
   List<Student> search();
-
 
   @Select("SELECT * FROM students WHERE id = #{id}")
   Student findStudent(int id);
@@ -36,7 +35,7 @@ public interface StudentRepository {
   void  registerStudentsCourses(StudentsCourses studentsCourses);
 
 //受講生更新処理
-  @Update("UPDATE students SET name = #{name}, email = #{email} ,remarks=#{remarks} WHERE id = #{id}")
+  @Update("UPDATE students SET name = #{name}, email = #{email} ,remarks=#{remarks} , is_deleted = #{isDeleted} WHERE id = #{id}")
   int updateStudent(Student student);
 
   // コース情報更新処理
