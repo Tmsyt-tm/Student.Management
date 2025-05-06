@@ -36,6 +36,11 @@
       </tr>
     </table>
   </div>
-
   <button type="submit">更新</button>
+
+    <label>
+      <input type="checkbox" th:field="*{student.isDeleted}" th:checked="${student != null && student.isDeleted != null ? student.isDeleted : false}" />
+      受講キャンセル
+    </label>
+
 </form>
