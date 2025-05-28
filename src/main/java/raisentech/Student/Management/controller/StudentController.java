@@ -100,7 +100,7 @@ public class StudentController {
     // StudentDetail を登録
     service.handleStudentTransaction(studentDetail, false);
 
-    return ResponseEntity.ok("redirect:/studentList"); // 登録後、学生一覧ページにリダイレクト
+    return ResponseEntity.ok("新規登録完了"); // 登録後、学生一覧ページにリダイレクト
   }
 
 
