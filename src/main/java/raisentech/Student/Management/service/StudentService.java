@@ -12,13 +12,16 @@ import raisentech.Student.Management.data.Student;
 import raisentech.Student.Management.data.StudentsCourses;
 import raisentech.Student.Management.domain.StudentDetail;
 
+/**
+ * 受講生情報を取り扱うサービスです。
+ * 受講生の検索や登録・更新処理を行います。
+ */
 @Service
 public class StudentService {
 
   private final StudentRepository repository;
   private final StudentConverter converter;
 
-  // 登録された受講生のリストを取得
   @Getter
   private final List<StudentDetail> studentList = new ArrayList<>();
 
@@ -28,6 +31,15 @@ public class StudentService {
     this.converter = converter;
   }
 
+  /**
+   * 受講生情報を登録もしくは検索を行います。
+   * 検索の処理{@code isRetrieveDetails} が trueの場合 全受講生情報とそれに紐づくコース情報を取得し、converterでStudentdetailへ変換し返します。
+   * 登録の処理{@code isRetrieveDetails} が false の場合 StudentDetailを元に受講生情報とコース情報を登録します。
+   *
+   * @param studentDetail  登録処理時に使用される受講生およびコース情報を含むオブジェクト。検索処理時には未使用ですが、null にしないでください。
+   * @param isRetrieveDetails true の場合は情報を取得し返します、false の場合は登録処理を実行します。
+   * @return {@code isRetrieveDetails} が true の場合、受講生詳細情報を返します。false の場合は null を返します。
+   */
   @Transactional
   public List<StudentDetail> handleStudentTransaction(StudentDetail studentDetail,
       boolean isRetrieveDetails) {
@@ -36,7 +48,6 @@ public class StudentService {
       List<Student> students = repository.search();
       List<StudentsCourses> courses = new ArrayList<>();
 
-      // 各受講生に関連するコース情報を取得
       for (Student student : students) {
         List<StudentsCourses> findStudentCourses = repository.findStudentCourses((student.getId()));
         courses.addAll(findStudentCourses);

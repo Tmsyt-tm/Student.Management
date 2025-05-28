@@ -11,15 +11,12 @@ import raisentech.Student.Management.data.StudentsCourses;
 @Getter
 @Setter
 @NoArgsConstructor// Lombok を使って、引数なしのコンストラクタ（デフォルトコンストラクタ）を自動生成するアノテーション
+@AllArgsConstructor//全フィールドを引数に取るコンストラクタを自動生成するアノテーション
 public class StudentDetail {
 
   private Student student;
   private List<StudentsCourses> studentsCourses;
 
-  public StudentDetail(Student student, List<StudentsCourses> studentsCourses) {
-    this.student = student;
-    this.studentsCourses = studentsCourses;
-
   }
-}
+
 

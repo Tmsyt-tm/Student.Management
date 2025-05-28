@@ -1,16 +1,13 @@
 package raisentech.Student.Management.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,19 +18,25 @@ import raisentech.Student.Management.data.StudentsCourses;
 import raisentech.Student.Management.domain.StudentDetail;
 import raisentech.Student.Management.service.StudentService;
 
+/**
+ * 受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。
+ */
 @RestController
 public class StudentController {
 
   private final StudentService service;
-  private final StudentConverter converter;
 
   @Autowired
   public StudentController(StudentService service, StudentConverter studentConverter) {
 
     this.service = service;
-    this.converter = studentConverter;
   }
 
+  /**
+   *受講生一覧検索です。
+   * 全件検索を行うので、条件指定は行いません。
+   * @return 受講生一覧（全件）
+   */
   // 統一メソッドで受講生情報とコース情報の一覧を取得
   @GetMapping("/studentList")
   public List<StudentDetail> getStudentList() {
@@ -42,7 +45,14 @@ public class StudentController {
     return studentDetails;
   }
 
-  //新規受講生の登録
+
+  /**
+   * 新規受講生登録です。
+   * registerStudent.htmlで入力した情報をstudentsテーブルへ登録します。
+   * IDは自動生成されます。
+   * @param model
+   * @return
+   */
   @GetMapping("/newStudent")
   public String newStudent(Model model) {
     Student student = new Student(); // 空の学生オブジェクトを用意
@@ -55,7 +65,14 @@ public class StudentController {
     return "registerStudent";
   }
 
-  //受講生情報の更新
+  /**
+   * 受講生検索です。
+   * IDに紐づく任意の受講生の情報を取得します。
+   *
+   * @param id 受講生ID
+   * @param model
+   * @return 受講生
+   */
   @GetMapping("/students/edit/{id}")
   public String editStudent(@PathVariable int id, Model model) {
     StudentDetail studentDetail = service.findStudent(id); // IDに対応するStudentを取得
@@ -83,7 +100,7 @@ public class StudentController {
     // StudentDetail を登録
     service.handleStudentTransaction(studentDetail, false);
 
-    return ResponseEntity.ok("redirect:/studentList"); // 登録後、学生一覧ページにリダイレクト
+    return ResponseEntity.ok("新規登録完了"); // 登録後、学生一覧ページにリダイレクト
   }
 
 
